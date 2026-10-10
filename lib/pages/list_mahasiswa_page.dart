@@ -166,17 +166,8 @@ class _ListMahasiswaPageState extends State<ListMahasiswaPage> {
                         itemBuilder: (context, index) {
                           final mahasiswa = filtered[index];
                           return ListTile(
-                            leading: CircleAvatar(
-                              backgroundColor: Color(mahasiswa.warnaProfil),
-                              backgroundImage: mahasiswa.foto == null
-                                  ? null
-                                  : MemoryImage(mahasiswa.foto!),
-                              child: mahasiswa.foto == null
-                                  ? const Icon(
-                                      Icons.person_outline,
-                                      color: Colors.white,
-                                    )
-                                  : null,
+                            leading: const CircleAvatar(
+                              child: Icon(Icons.person_outline),
                             ),
                             title: Text(mahasiswa.nama),
                             subtitle: Text(

@@ -3,11 +3,7 @@
 *.log
 *.pyc
 *.swp
-*.swo
-*~
 .DS_Store
-Thumbs.db
-Desktop.ini
 .atom/
 .build/
 .buildlog/
@@ -31,23 +27,11 @@ migrate_working_dir/
 **/doc/api/
 **/ios/Flutter/.last_build_id
 .dart_tool/
-.flutter-plugins
 .flutter-plugins-dependencies
 .pub-cache/
 .pub/
 /build/
 /coverage/
-
-# Local environment configuration (keep example files available)
-.env
-.env.*
-!.env.example
-!.env.*.example
-
-# Dart tooling output
-*.dart.js
-*.dart.js.deps
-*.dart.js.map
 
 # Symbolication related
 app.*.symbols
