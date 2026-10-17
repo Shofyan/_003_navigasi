@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../models/mahasiswa.dart';
 import 'detail_mahasiswa_page.dart';
 import 'form_mahasiswa_page.dart';
+import 'student_navigation.dart';
 
 class ListMahasiswaPage extends StatefulWidget {
   const ListMahasiswaPage({super.key});
@@ -18,13 +19,20 @@ class _ListMahasiswaPageState extends State<ListMahasiswaPage> {
       nim: '2026001',
       nama: 'Andi Pratama',
       prodi: 'Teknik Informatika',
+      phone: '081234567890',
     ),
     const Mahasiswa(
       nim: '2026002',
       nama: 'Siti Aisyah',
       prodi: 'Sistem Informasi',
+      phone: '081987654321',
     ),
-    const Mahasiswa(nim: '2026003', nama: 'Budi Santoso', prodi: 'Manajemen'),
+    const Mahasiswa(
+      nim: '2026003',
+      nama: 'Budi Santoso',
+      prodi: 'Manajemen',
+      phone: '081234567890',
+    ),
   ];
 
   @override
@@ -45,6 +53,7 @@ class _ListMahasiswaPageState extends State<ListMahasiswaPage> {
   }
 
   Future<void> _tambah() async {
+    ScaffoldMessenger.of(context).removeCurrentSnackBar();
     final result = await Navigator.push<Mahasiswa>(
       context,
       MaterialPageRoute(
@@ -57,6 +66,7 @@ class _ListMahasiswaPageState extends State<ListMahasiswaPage> {
   }
 
   Future<void> _detail(Mahasiswa mahasiswa) async {
+    ScaffoldMessenger.of(context).removeCurrentSnackBar();
     final result = await Navigator.push<DetailResult>(
       context,
       MaterialPageRoute(
@@ -95,27 +105,17 @@ class _ListMahasiswaPageState extends State<ListMahasiswaPage> {
         .toList();
     return Scaffold(
       appBar: AppBar(title: const Text('Data Mahasiswa')),
-      drawer: Drawer(
-        child: SafeArea(
-          child: ListView(
-            children: [
-              const DrawerHeader(child: Text('Manajemen Mahasiswa')),
-              ListTile(
-                leading: const Icon(Icons.people_outline),
-                title: const Text('Daftar Mahasiswa'),
-                onTap: () => Navigator.pop(context),
-              ),
-              ListTile(
-                leading: const Icon(Icons.person_add_outlined),
-                title: const Text('Tambah Mahasiswa'),
-                onTap: () {
-                  Navigator.pop(context);
-                  _tambah();
-                },
-              ),
-            ],
-          ),
-        ),
+      drawer: StudentDrawer(
+        selected: 0,
+        onSelect: (i) {
+          if (i == 1) _tambah();
+        },
+      ),
+      bottomNavigationBar: StudentBottomNav(
+        selected: 0,
+        onSelect: (i) {
+          if (i == 1) _tambah();
+        },
       ),
       body: Center(
         child: ConstrainedBox(

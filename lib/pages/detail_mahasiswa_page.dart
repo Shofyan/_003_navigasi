@@ -73,7 +73,18 @@ class _DetailMahasiswaPageState extends State<DetailMahasiswaPage> {
           child: ListView(
             padding: const EdgeInsets.all(24),
             children: [
-              const Icon(Icons.school_outlined, size: 72),
+              Center(
+                child: CircleAvatar(
+                  radius: 40,
+                  backgroundColor: Color(mahasiswa.warnaProfil),
+                  backgroundImage: mahasiswa.fotoProfil == null
+                      ? null
+                      : MemoryImage(mahasiswa.fotoProfil!),
+                  child: mahasiswa.fotoProfil == null
+                      ? const Icon(Icons.person, size: 40)
+                      : null,
+                ),
+              ),
               const SizedBox(height: 24),
               ListTile(
                 title: const Text('Nama Lengkap'),
@@ -84,6 +95,38 @@ class _DetailMahasiswaPageState extends State<DetailMahasiswaPage> {
                 title: const Text('Program Studi'),
                 subtitle: Text(mahasiswa.prodi),
               ),
+              ListTile(
+                title: const Text('Nomor Telepon'),
+                subtitle: Text(mahasiswa.phone),
+              ),
+              for (final entry in <String, String>{
+                'Nama Panggilan': mahasiswa.namaPanggilan,
+                'Jenis Kelamin': mahasiswa.jenisKelamin,
+                'Tempat Lahir': mahasiswa.tempatLahir,
+                'Tanggal Lahir': mahasiswa.tanggalLahir == null
+                    ? ''
+                    : '${mahasiswa.tanggalLahir!.day}/${mahasiswa.tanggalLahir!.month}/${mahasiswa.tanggalLahir!.year}',
+                'Agama': mahasiswa.agama,
+                'Semester': '${mahasiswa.semester}',
+                'Kelas': mahasiswa.kelas,
+                'Status Mahasiswa': mahasiswa.status,
+                'IPK': mahasiswa.ipk.toStringAsFixed(2),
+                'Penerima Beasiswa': mahasiswa.beasiswa ? 'Ya' : 'Tidak',
+                'Bersedia Magang': mahasiswa.bersediaMagang ? 'Ya' : 'Tidak',
+                'Email': mahasiswa.email,
+                'Alamat': mahasiswa.alamat,
+                'Provinsi': mahasiswa.provinsi,
+                'Kota/Kabupaten': mahasiswa.kota,
+                'Minat': mahasiswa.minat.join(', '),
+                'Dokumen/KTM': mahasiswa.namaDokumen ?? '',
+                'Persetujuan Data': mahasiswa.persetujuan
+                    ? 'Setuju'
+                    : 'Belum disetujui',
+              }.entries)
+                ListTile(
+                  title: Text(entry.key),
+                  subtitle: Text(entry.value.isEmpty ? '—' : entry.value),
+                ),
               const SizedBox(height: 24),
               FilledButton.icon(
                 onPressed: _edit,
