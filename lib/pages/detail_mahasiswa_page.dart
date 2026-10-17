@@ -62,87 +62,145 @@ class _DetailMahasiswaPageState extends State<DetailMahasiswaPage> {
     Navigator.pop(context, const DetailResult.deleted());
   }
 
+  Widget _section(String key, Map<String, String> values, {Widget? header}) {
+    return ListView(
+      key: PageStorageKey(key),
+      padding: const EdgeInsets.all(24),
+      children: [
+        if (header != null) ...[header, const SizedBox(height: 24)],
+        for (final entry in values.entries)
+          ListTile(
+            title: Text(entry.key),
+            subtitle: Text(entry.value.isEmpty ? '—' : entry.value),
+          ),
+      ],
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    final mahasiswa = widget.mahasiswa;
-    return Scaffold(
-      appBar: AppBar(title: const Text('Detail Mahasiswa')),
-      body: Center(
-        child: ConstrainedBox(
-          constraints: const BoxConstraints(maxWidth: 640),
-          child: ListView(
-            padding: const EdgeInsets.all(24),
-            children: [
-              Center(
-                child: CircleAvatar(
-                  radius: 40,
-                  backgroundColor: Color(mahasiswa.warnaProfil),
-                  backgroundImage: mahasiswa.fotoProfil == null
-                      ? null
-                      : MemoryImage(mahasiswa.fotoProfil!),
-                  child: mahasiswa.fotoProfil == null
-                      ? const Icon(Icons.person, size: 40)
-                      : null,
-                ),
+    final m = widget.mahasiswa;
+    return DefaultTabController(
+      length: 4,
+      child: Scaffold(
+        appBar: AppBar(
+          title: const Text('Detail Mahasiswa'),
+          bottom: const TabBar(
+            isScrollable: true,
+            tabs: [
+              Tab(icon: Icon(Icons.person_outline), text: 'Data Pribadi'),
+              Tab(icon: Icon(Icons.school_outlined), text: 'Akademik'),
+              Tab(
+                icon: Icon(Icons.location_on_outlined),
+                text: 'Kontak & Alamat',
               ),
-              const SizedBox(height: 24),
-              ListTile(
-                title: const Text('Nama Lengkap'),
-                subtitle: Text(mahasiswa.nama),
-              ),
-              ListTile(title: const Text('NIM'), subtitle: Text(mahasiswa.nim)),
-              ListTile(
-                title: const Text('Program Studi'),
-                subtitle: Text(mahasiswa.prodi),
-              ),
-              ListTile(
-                title: const Text('Nomor Telepon'),
-                subtitle: Text(mahasiswa.phone),
-              ),
-              for (final entry in <String, String>{
-                'Nama Panggilan': mahasiswa.namaPanggilan,
-                'Jenis Kelamin': mahasiswa.jenisKelamin,
-                'Tempat Lahir': mahasiswa.tempatLahir,
-                'Tanggal Lahir': mahasiswa.tanggalLahir == null
-                    ? ''
-                    : '${mahasiswa.tanggalLahir!.day}/${mahasiswa.tanggalLahir!.month}/${mahasiswa.tanggalLahir!.year}',
-                'Agama': mahasiswa.agama,
-                'Semester': '${mahasiswa.semester}',
-                'Kelas': mahasiswa.kelas,
-                'Status Mahasiswa': mahasiswa.status,
-                'IPK': mahasiswa.ipk.toStringAsFixed(2),
-                'Penerima Beasiswa': mahasiswa.beasiswa ? 'Ya' : 'Tidak',
-                'Bersedia Magang': mahasiswa.bersediaMagang ? 'Ya' : 'Tidak',
-                'Email': mahasiswa.email,
-                'Alamat': mahasiswa.alamat,
-                'Provinsi': mahasiswa.provinsi,
-                'Kota/Kabupaten': mahasiswa.kota,
-                'Minat': mahasiswa.minat.join(', '),
-                'Dokumen/KTM': mahasiswa.namaDokumen ?? '',
-                'Persetujuan Data': mahasiswa.persetujuan
-                    ? 'Setuju'
-                    : 'Belum disetujui',
-              }.entries)
-                ListTile(
-                  title: Text(entry.key),
-                  subtitle: Text(entry.value.isEmpty ? '—' : entry.value),
-                ),
-              const SizedBox(height: 24),
-              FilledButton.icon(
-                onPressed: _edit,
-                icon: const Icon(Icons.edit_outlined),
-                label: const Text('Edit Data'),
-              ),
-              const SizedBox(height: 12),
-              OutlinedButton.icon(
-                onPressed: _hapus,
-                icon: const Icon(Icons.delete_outline),
-                label: const Text('Hapus Data'),
-                style: OutlinedButton.styleFrom(
-                  foregroundColor: Theme.of(context).colorScheme.error,
-                ),
+              Tab(
+                icon: Icon(Icons.settings_outlined),
+                text: 'Preferensi & Dokumen',
               ),
             ],
+          ),
+        ),
+        body: Center(
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 640),
+            child: Column(
+              children: [
+                Expanded(
+                  child: TabBarView(
+                    children: [
+                      _section(
+                        'pribadi',
+                        {
+                          'NIM': m.nim,
+                          'Nama Lengkap': m.nama,
+                          'Nama Panggilan': m.namaPanggilan,
+                          'Jenis Kelamin': m.jenisKelamin,
+                          'Tempat Lahir': m.tempatLahir,
+                          'Tanggal Lahir': m.tanggalLahir == null
+                              ? ''
+                              : '${m.tanggalLahir!.day}/${m.tanggalLahir!.month}/${m.tanggalLahir!.year}',
+                          'Agama': m.agama,
+                        },
+                        header: Center(
+                          child: CircleAvatar(
+                            radius: 40,
+                            backgroundColor: Color(m.warnaProfil),
+                            backgroundImage: m.fotoProfil == null
+                                ? null
+                                : MemoryImage(m.fotoProfil!),
+                            child: m.fotoProfil == null
+                                ? const Icon(Icons.person, size: 40)
+                                : null,
+                          ),
+                        ),
+                      ),
+                      _section('akademik', {
+                        'Program Studi': m.prodi,
+                        'Semester': '${m.semester}',
+                        'Kelas': m.kelas,
+                        'Status Mahasiswa': m.status,
+                        'IPK': m.ipk.toStringAsFixed(2),
+                        'Penerima Beasiswa': m.beasiswa ? 'Ya' : 'Tidak',
+                        'Bersedia Magang': m.bersediaMagang ? 'Ya' : 'Tidak',
+                      }),
+                      _section('kontak', {
+                        'Email': m.email,
+                        'No. HP': m.phone,
+                        'Password Portal': m.password.isEmpty ? '' : '••••••••',
+                        'Alamat': m.alamat,
+                        'Provinsi': m.provinsi,
+                        'Kota/Kabupaten': m.kota,
+                      }),
+                      _section('preferensi', {
+                        'Minat': m.minat.join(', '),
+                        'Dokumen/KTM': m.namaDokumen ?? '',
+                        'Warna Profil':
+                            {
+                              0xFF2196F3: 'Biru',
+                              0xFF4CAF50: 'Hijau',
+                              0xFF9C27B0: 'Ungu',
+                            }[m.warnaProfil] ??
+                            'Lainnya',
+                        'Persetujuan Data': m.persetujuan
+                            ? 'Setuju'
+                            : 'Belum disetujui',
+                      }),
+                    ],
+                  ),
+                ),
+                SafeArea(
+                  top: false,
+                  child: Padding(
+                    padding: const EdgeInsets.all(16),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: FilledButton.icon(
+                            onPressed: _edit,
+                            icon: const Icon(Icons.edit_outlined),
+                            label: const Text('Edit Data'),
+                          ),
+                        ),
+                        const SizedBox(width: 12),
+                        Expanded(
+                          child: OutlinedButton.icon(
+                            onPressed: _hapus,
+                            icon: const Icon(Icons.delete_outline),
+                            label: const Text('Hapus Data'),
+                            style: OutlinedButton.styleFrom(
+                              foregroundColor: Theme.of(context)
+                                  .colorScheme
+                                  .error,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),

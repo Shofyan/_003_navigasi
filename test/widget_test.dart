@@ -110,13 +110,6 @@ void main() {
     expect(find.text('Dewi Lestari'), findsOneWidget);
     await tester.tap(find.text('Dewi Lestari'));
     await tester.pumpAndSettle();
-    await tester.scrollUntilVisible(
-      find.text('Edit Data'),
-      400,
-      scrollable: find.byType(Scrollable).first,
-    );
-    await tester.ensureVisible(find.text('Edit Data'));
-    await tester.pumpAndSettle();
     await tester.tap(find.text('Edit Data'));
     await tester.pumpAndSettle();
     expect(find.text('2301001'), findsOneWidget);
